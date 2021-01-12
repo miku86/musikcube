@@ -6,10 +6,8 @@ buildscript {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 29
@@ -32,16 +30,10 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
-            firebaseCrashlytics {
-                mappingFileUploadEnabled false
-            }
         }
 
         debug {
             minifyEnabled false
-            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
-            ext.enableCrashlytics = false
             ext.alwaysUpdateBuildId = false
         }
     }
@@ -60,10 +52,6 @@ dependencies {
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
-    implementation 'com.google.firebase:firebase-analytics:17.6.0'
-    implementation 'com.google.firebase:firebase-core:17.5.1'
-    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
 
     implementation(name:'android-taskrunner-0.5', ext:'aar')
     implementation(name:'exoplayer-extension-flac-release-v2', ext:'aar')

@@ -32,11 +32,9 @@ import io.casey.musikcube.remote.ui.shared.extension.toolbar
 import io.casey.musikcube.remote.ui.shared.mixin.MetadataProxyMixin
 import io.casey.musikcube.remote.ui.shared.mixin.PlaybackMixin
 import io.casey.musikcube.remote.ui.shared.util.Duration
-import io.casey.musikcube.remote.ui.shared.util.UpdateCheck
 
 class MainActivity : BaseActivity() {
     private val handler = Handler()
-    private var updateCheck: UpdateCheck = UpdateCheck()
     private var seekbarValue = -1
     private var blink = 0
 
@@ -91,7 +89,6 @@ class MainActivity : BaseActivity() {
         bindCheckBoxEventListeners()
         rebindUi()
         scheduleUpdateTime(true)
-        runUpdateCheck()
         initObservers()
     }
 
@@ -490,23 +487,6 @@ class MainActivity : BaseActivity() {
         repeatCb.setCheckWithoutEvent(checked, repeatListener)
 
         playback.service.toggleRepeatMode()
-    }
-
-    private fun runUpdateCheck() {
-        if (!UpdateAvailableDialog.displayed) {
-            updateCheck.run { required, version, url ->
-                if (!paused && required) {
-                    val suppressed = prefs.getString(Prefs.Key.UPDATE_DIALOG_SUPPRESSED_VERSION, "")
-                    if (!UpdateAvailableDialog.displayed && suppressed != version) {
-                        val tag = UpdateAvailableDialog.TAG
-                        if (supportFragmentManager.findFragmentByTag(tag) == null) {
-                            UpdateAvailableDialog.newInstance(version, url).show(supportFragmentManager, tag)
-                            UpdateAvailableDialog.displayed = true
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private val repeatListener = { _: CompoundButton, _: Boolean ->
